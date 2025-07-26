@@ -1,0 +1,270 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGIT ADVISOR - Labour Law Consultant</title>
+    <style>
+        body {
+            font-family: 'Verdana', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(to right, #2a5298, #4a90e2);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 3.2em;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            font-weight: 900;
+        }
+        header p {
+            font-size: 1.8em;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+        }
+        .header-contact {
+            font-size: 1.2em;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .header-contact a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        .header-contact a:hover {
+            color: #ffca3a;
+            text-decoration: underline;
+        }
+        nav {
+            background-color: #4a90e2;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ffca3a;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .section {
+            background: #ffffff;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            border-left: 5px solid #2a5298;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            font-size: 2em;
+            color: #2a5298;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin: 15px 0;
+        }
+        .services-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .services-list li {
+            margin: 20px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1em;
+        }
+        .services-list li:before {
+            content: "✓";
+            color: #27ae60;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .contact-details {
+            font-size: 1.2em;
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .contact-details span {
+            display: block;
+            margin: 12px 0;
+        }
+        .contact-details a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .contact-details a:hover {
+            text-decoration: underline;
+            color: #4a90e2;
+        }
+        footer {
+            background: linear-gradient(to right, #4a90e2, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        @media (max-width: 600px) {
+            header { padding: 50px 0; }
+            header h1 { font-size: 2.2em; }
+            header p { font-size: 1.3em; }
+            .header-contact a { display: block; margin: 5px 0; }
+            nav ul { flex-direction: column; text-align: center; gap: 10px; }
+            .container { padding: 15px; }
+            .section { padding: 20px; }
+            h2 { font-size: 1.6em; }
+            .logo { max-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://via.placeholder.com/150" alt="LEGIT ADVISOR Logo" class="logo">
+        <h1>LEGIT ADVISOR</h1>
+        <p>Trusted Labour Law Consultant</p>
+        <div class="header-contact">
+            <a href="tel:6354223228">Phone: 6354223228</a>
+            <a href="mailto:legitadvisor.india@gmail.com">Email: legitadvisor.india@gmail.com</a>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="section" id="home">
+            <h2>Welcome to LEGIT ADVISOR</h2>
+            <p>LEGIT ADVISOR is a leading labour law consultancy firm based in Ahmedabad, committed to delivering expert legal guidance. With over a decade of experience, we specialize in ensuring compliance with labour regulations, resolving disputes, and providing customized solutions for businesses and individuals across India.</p>
+        </div>
+        <div class="section" id="about">
+            <h2>About Us</h2>
+            <p>Founded in 2015, LEGIT ADVISOR has built a reputation for excellence in labour law consultancy. Our team of experienced legal professionals is dedicated to safeguarding your interests with integrity and precision. We serve a wide range of clients, from small businesses to large corporations, ensuring they navigate the complexities of labour laws with ease.</p>
+        </div>
+        <div class="section" id="services">
+            <h2>Our Services</h2>
+            <ul class="services-list">
+                <li>Comprehensive Labour Law Compliance Audits</li>
+                <li>Drafting and Reviewing Employment Contracts</li>
+                <li>Mediation and Dispute Resolution Services</li>
+                <li>Development of Workplace Policies and Procedures</li>
+                <li>Training Programs on Labour Law Compliance</li>
+                <li>Representation in Labour Court Cases</li>
+            </ul>
+        </div>
+        <div class="section" id="contact">
+            <h2>Contact Us</h2>
+            <div class="contact-details">
+                <span><strong>Address:</strong> 415, City Gate, Near Vishala Hotel, Narol Road, Shahwadi, Vasna, Ahmedabad-380007, Gujarat, INDIA</span>
+                <span><strong>Phone:</strong> <a href="tel:6354223228">6354223228</a></span>
+                <span><strong>Email:</strong> <a href="mailto:legitadvisor.india@gmail.com">legitadvisor.india@gmail.com</a></span>
+                <span><strong>Operating Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM IST | Saturday, 10:00 AM - 2:00 PM IST</span>
+                <span><strong>Emergency Support:</strong> Available 24/7 via Email</span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 LEGIT ADVISOR. All rights reserved. | Last Updated: July 26, 2025, 07:02 PM IST</p>
+    </footer>
+</body>
+</html>
